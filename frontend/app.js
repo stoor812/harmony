@@ -1,5 +1,31 @@
 const DAEMON = 'http://localhost:8080';
 
+// ── Toast notifications ────────────────────────────────────────────────────
+function showToast(title, detail = '', type = 'info', duration = 2500) {
+  const icons = { success: '✓', error: '✕', info: '♪' };
+  const container = document.getElementById('toast-container');
+
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `
+    <span class="toast-icon ${type}">${icons[type]}</span>
+    <div class="toast-body">
+      <div class="toast-title">${title}</div>
+      ${detail ? `<div class="toast-detail">${detail}</div>` : ''}
+    </div>
+  `;
+
+  container.appendChild(toast);
+
+  const dismiss = () => {
+    toast.classList.add('toast-out');
+    toast.addEventListener('animationend', () => toast.remove(), { once: true });
+  };
+
+  setTimeout(dismiss, duration);
+  toast.addEventListener('click', dismiss);
+}
+
 let currentState   = 'IDLE';
 let currentTrack   = null;
 let progressTimer  = null;
@@ -57,8 +83,9 @@ function updateUI(data) {
       document.getElementById('track-title').textContent  = t.title;
       document.getElementById('track-artist').textContent = t.artist;
       document.getElementById('track-album').textContent  = t.album;
-      document.getElementById('album-art').src = t.album_art ||
-        'https://via.placeholder.com/220x220/1a1a2e/ffffff?text=♪';
+      const art = document.getElementById('album-art');
+      art.src = t.album_art || 'https://via.placeholder.com/210x210/1a1a2e/ffffff?text=%E2%99%AA';
+      art.alt = `${t.title} by ${t.artist}`;
 
       // Load audio preview
       const audio = document.getElementById('audio-player');
@@ -74,9 +101,14 @@ function updateUI(data) {
     }
   }
 
-  // Play button icon
-  const playBtn = document.getElementById('btn-play');
-  playBtn.textContent = (currentState === 'PLAYING') ? '⏸' : '▶';
+  // Play/pause SVG icon swap
+  const isPlaying = currentState === 'PLAYING';
+  document.getElementById('icon-play').style.display  = isPlaying ? 'none' : '';
+  document.getElementById('icon-pause').style.display = isPlaying ? ''     : 'none';
+  document.getElementById('btn-play').setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
+
+  // Album ring spins while playing
+  document.getElementById('album-ring').classList.toggle('playing', isPlaying);
 
   // Audio sync with state
   syncAudio(data.state);
@@ -173,11 +205,13 @@ function updateUpNext(tracks) {
 // ── Health panel ───────────────────────────────────────────────────────────
 function updateHealth(data) {
   const pct = Math.round((data.memory_used / data.memory_cap) * 100);
-  document.getElementById('health-info').innerHTML =
-    `uptime: ${data.uptime_seconds}s &nbsp;|&nbsp; ` +
-    `memory: ${pct}% of 256KB &nbsp;|&nbsp; ` +
-    `watchdog: ${data.watchdog} &nbsp;|&nbsp; ` +
-    `queue: ${data.queue_size} tracks`;
+  document.getElementById('health-info').innerHTML = `
+    <span class="health-key">uptime</span>   <span class="health-val">${data.uptime_seconds}s</span>
+    <span class="health-key">watchdog</span> <span class="health-val">${data.watchdog}</span>
+    <span class="health-key">queue</span>    <span class="health-val">${data.queue_size} tracks</span>
+    <span class="health-key">memory</span>  <span class="health-val">${pct}% of 256 KB</span>
+    <div class="health-bar-wrap"><div class="health-bar-fill" style="width:${pct}%"></div></div>
+  `;
 }
 
 // ── Commands ───────────────────────────────────────────────────────────────
@@ -218,9 +252,11 @@ async function simulateApiFailure() {
     btn.classList.add('active');
     msg.textContent = 'API failure simulation toggled. When ON: iTunes searches return empty results. Daemon gracefully degrades to local catalog. When OFF: iTunes API calls resume normally.';
     msg.classList.add('visible');
+    showToast('API failure ON', 'iTunes searches will return empty', 'error');
   } else {
     btn.classList.remove('active');
     msg.classList.remove('visible');
+    showToast('API failure OFF', 'iTunes API calls resumed', 'success');
   }
   await sendCommand('simulate_api_failure', { enabled: apiFailureOn });
 }
@@ -272,8 +308,11 @@ async function enqueueTrack(track, position) {
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({ ...track, position })
     });
+    const label = position === 'start' ? 'Playing next' : 'Added to queue';
+    showToast(label, `${track.title} — ${track.artist}`, 'success');
     if (currentState === 'IDLE' || currentState === 'STOPPED') await sendCommand('play');
   } catch (e) {
+    showToast('Enqueue failed', 'Check that the daemon is running', 'error');
     console.error('Enqueue failed:', e);
   }
 }
