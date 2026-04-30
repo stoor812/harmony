@@ -41,6 +41,7 @@ private:
     void handle_status(const httplib::Request&, httplib::Response&);
     void handle_command(const httplib::Request&, httplib::Response&);
     void handle_search(const httplib::Request&, httplib::Response&);
+    void handle_enqueue(const httplib::Request&, httplib::Response&);
     void handle_health(const httplib::Request&, httplib::Response&);
 
     // Helpers

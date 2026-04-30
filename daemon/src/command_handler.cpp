@@ -101,6 +101,12 @@ void CommandHandler::register_routes() {
         handle_search(req, res);
     });
 
+    // ── POST /enqueue ─────────────────────────────────────────────────────────
+    // Frontend sends track JSON + position ("start"|"end")
+    server_.Post("/enqueue", [this](const httplib::Request& req, httplib::Response& res) {
+        handle_enqueue(req, res);
+    });
+
     // ── GET /health ───────────────────────────────────────────────────────────
     server_.Get("/health", [this](const httplib::Request& req, httplib::Response& res) {
         handle_health(req, res);
@@ -206,7 +212,10 @@ void CommandHandler::handle_command(const httplib::Request& req, httplib::Respon
         buffering_ = false;
         ok = sm_.transition(PlayerCommand::SKIP);
         if (ok) {
+            Track finished = queue_.current_track();
             queue_.advance();
+            // Keep local catalog circular: re-enqueue finished track if below 10
+            if (queue_.size() < 10) queue_.enqueue(finished);
             start_buffer_timer();
         }
     } else {
@@ -244,6 +253,39 @@ void CommandHandler::handle_search(const httplib::Request& req, httplib::Respons
     for (auto& t : tracks) results.push_back(track_to_json(t));
 
     res.set_content(json{{"results", results}}.dump(), "application/json");
+}
+
+void CommandHandler::handle_enqueue(const httplib::Request& req, httplib::Response& res) {
+    set_cors(res);
+
+    json body;
+    try {
+        body = json::parse(req.body);
+    } catch (...) {
+        res.status = 400;
+        res.set_content(json{{"error", "Invalid JSON"}}.dump(), "application/json");
+        return;
+    }
+
+    Track track;
+    track.id          = body.value("id", "");
+    track.title       = body.value("title", "Unknown Title");
+    track.artist      = body.value("artist", "Unknown Artist");
+    track.album       = body.value("album", "Unknown Album");
+    track.album_art   = body.value("album_art", "");
+    track.preview_url = body.value("preview_url", "");
+
+    if (!track.is_valid()) {
+        res.status = 400;
+        res.set_content(json{{"error", "Track must have a non-empty id"}}.dump(), "application/json");
+        return;
+    }
+
+    std::string position = body.value("position", "end");
+    bool ok = (position == "start") ? queue_.enqueue_front(track) : queue_.enqueue(track);
+
+    Logger::instance().info("HTTP", "Enqueue [" + position + "]: " + track.title);
+    res.set_content(json{{"ok", ok}, {"queue_size", queue_.size()}}.dump(), "application/json");
 }
 
 void CommandHandler::handle_health(const httplib::Request&, httplib::Response& res) {

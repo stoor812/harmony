@@ -1,4 +1,4 @@
-const DAEMON = 'https://studious-space-zebra-69xj5pwqg97vhrjqj-8080.app.github.dev';
+const DAEMON = 'http://localhost:8080';
 
 let currentState   = 'IDLE';
 let currentTrack   = null;
@@ -63,6 +63,14 @@ function updateUI(data) {
       // Load audio preview
       const audio = document.getElementById('audio-player');
       audio.src   = t.preview_url;
+
+      // Reset progress for the new track
+      clearInterval(progressTimer);
+      progressTimer = null;
+      progressSecs  = 0;
+      updateProgressBar(0);
+      document.getElementById('time-current').textContent = '0:00';
+      if (data.state === 'PLAYING') startProgressTimer();
     }
   }
 
@@ -99,12 +107,14 @@ function syncAudio(state) {
 
 // ── Progress bar (fake 30s timer) ──────────────────────────────────────────
 function handleProgress(state, prevState) {
-  if (state === 'PLAYING' && prevState !== 'PLAYING') {
-    // Just started playing - reset and start timer
+  if (state === 'PLAYING') {
+    // Reset progress when coming from a fresh start (not resuming from pause)
     if (prevState === 'BUFFERING' || prevState === 'IDLE') {
       progressSecs = 0;
     }
-    startProgressTimer();
+    // Always ensure a timer is running while playing — covers the case where
+    // BUFFERING resolves within one poll interval and prevState === 'PLAYING'
+    if (!progressTimer) startProgressTimer();
   } else if (state === 'PAUSED' && progressTimer) {
     clearInterval(progressTimer);
     progressTimer = null;
@@ -113,18 +123,23 @@ function handleProgress(state, prevState) {
     progressTimer = null;
     progressSecs  = 0;
     updateProgressBar(0);
+    document.getElementById('time-current').textContent = '0:00';
   }
 }
 
 function startProgressTimer() {
   if (progressTimer) clearInterval(progressTimer);
   progressTimer = setInterval(() => {
-    progressSecs = Math.min(progressSecs + 1, 30);
+    progressSecs++;
     updateProgressBar(progressSecs / 30);
     document.getElementById('time-current').textContent = formatTime(progressSecs);
     if (progressSecs >= 30) {
       clearInterval(progressTimer);
       progressTimer = null;
+      progressSecs  = 0;
+      updateProgressBar(0);
+      document.getElementById('time-current').textContent = '0:00';
+      sendCommand('skip');  // preview ended — advance to next track
     }
   }, 1000);
 }
@@ -191,13 +206,25 @@ function handlePlayPause() {
 
 function setVolume(val) {
   document.getElementById('vol-label').textContent = val;
+  document.getElementById('audio-player').volume = val / 100;
   sendCommand('volume', { value: parseInt(val) });
 }
 
 async function simulateApiFailure() {
   apiFailureOn = !apiFailureOn;
+  const btn = document.getElementById('btn-api-failure');
+  const msg = document.getElementById('msg-api-failure');
+  if (apiFailureOn) {
+    btn.classList.add('active');
+    msg.textContent = 'API failure simulation toggled. When ON: iTunes searches return empty results. Daemon gracefully degrades to local catalog. When OFF: iTunes API calls resume normally.';
+    msg.classList.add('visible');
+  } else {
+    btn.classList.remove('active');
+    msg.classList.remove('visible');
+  }
   await sendCommand('simulate_api_failure', { enabled: apiFailureOn });
 }
+
 
 // ── Search ─────────────────────────────────────────────────────────────────
 async function doSearch() {
@@ -217,35 +244,36 @@ async function doSearch() {
       return;
     }
 
-    container.innerHTML = items.map(t => `
-      <div class="search-item" onclick="playSearchResult(${JSON.stringify(t).replace(/"/g, '&quot;')})">
-        <img class="search-art" src="${t.album_art}" alt="" onerror="this.src='https://via.placeholder.com/36'"/>
-        <div class="search-info">
-          <div class="search-title">${t.title}</div>
-          <div class="search-artist">${t.artist}</div>
+    container.innerHTML = items.map(t => {
+      const td = JSON.stringify(t).replace(/"/g, '&quot;');
+      return `
+        <div class="search-item">
+          <img class="search-art" src="${t.album_art}" alt="" onerror="this.src='https://via.placeholder.com/36'"/>
+          <div class="search-info">
+            <div class="search-title">${t.title}</div>
+            <div class="search-artist">${t.artist}</div>
+          </div>
+          <div class="search-actions">
+            <button class="search-queue-btn" onclick="enqueueTrack(${td}, 'start')">▶ Next</button>
+            <button class="search-queue-btn" onclick="enqueueTrack(${td}, 'end')">+ End</button>
+          </div>
         </div>
-        <span class="search-play">▶</span>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   } catch (e) {
     container.innerHTML = '<div style="color:#e74c3c;font-size:13px">Search failed - is daemon running?</div>';
   }
 }
 
-async function playSearchResult(track) {
-  // Update the audio element directly with the preview URL
-  const audio = document.getElementById('audio-player');
-  audio.src   = track.preview_url;
-
-  // Update track display immediately
-  document.getElementById('track-title').textContent  = track.title;
-  document.getElementById('track-artist').textContent = track.artist;
-  document.getElementById('track-album').textContent  = track.album;
-  document.getElementById('album-art').src = track.album_art;
-  currentTrack = track;
-
-  // Tell daemon to play (triggers state machine)
-  if (currentState !== 'PLAYING') {
-    await sendCommand('play');
+async function enqueueTrack(track, position) {
+  try {
+    await fetch(`${DAEMON}/enqueue`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ ...track, position })
+    });
+    if (currentState === 'IDLE' || currentState === 'STOPPED') await sendCommand('play');
+  } catch (e) {
+    console.error('Enqueue failed:', e);
   }
 }

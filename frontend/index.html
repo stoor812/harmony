@@ -107,9 +107,10 @@
       <div class="section">
         <div class="section-title">Fault Injection</div>
         <div class="fault-buttons">
-          <button class="fault-btn" onclick="sendCommand('simulate_hang')">Simulate Hang</button>
-          <button class="fault-btn" onclick="simulateApiFailure()">Toggle API Failure</button>
-          <button class="fault-btn" onclick="sendCommand('simulate_invalid_transition')">Invalid Transition</button>
+          <div class="fault-item">
+            <button id="btn-api-failure" class="fault-btn" onclick="simulateApiFailure()">Toggle API Failure</button>
+            <div id="msg-api-failure" class="fault-msg"></div>
+          </div>
         </div>
       </div>
 

@@ -16,11 +16,10 @@ struct Track {
     bool is_valid() const { return !id.empty(); }
 };
 
-// Fixed-size queue - max 10 tracks, allocated at startup
-// This is the bounded buffer embedded pattern
+// Fixed-size queue - max 20 tracks (10 local + headroom for search results)
 class TrackQueue {
 public:
-    static constexpr int MAX_SIZE = 10;
+    static constexpr int MAX_SIZE = 20;
 
     TrackQueue();
 
@@ -36,6 +35,7 @@ public:
 
     // Add a track (from iTunes search results)
     bool enqueue(const Track& track);
+    bool enqueue_front(const Track& track);  // insert at position 1 (plays next)
 
     // Get next N tracks for "Up Next" display in frontend
     std::array<Track, 3> peek_next(int count) const;

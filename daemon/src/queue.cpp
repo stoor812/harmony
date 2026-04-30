@@ -107,6 +107,23 @@ bool TrackQueue::enqueue(const Track& track) {
     return true;
 }
 
+bool TrackQueue::enqueue_front(const Track& track) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (count_ >= MAX_SIZE) {
+        Logger::instance().warn("QUEUE", "Queue full, cannot enqueue_front: " + track.title);
+        return false;
+    }
+    // Shift everything after current (position 0) to make room at position 1
+    for (int i = count_; i > 1; i--) {
+        tracks_[i] = tracks_[i - 1];
+    }
+    tracks_[1] = track;
+    count_++;
+    Logger::instance().info("QUEUE", "Enqueued at front (plays next): " + track.title +
+        " by " + track.artist);
+    return true;
+}
+
 std::array<Track, 3> TrackQueue::peek_next(int count) const {
     std::lock_guard<std::mutex> lock(mutex_);
     std::array<Track, 3> result{};

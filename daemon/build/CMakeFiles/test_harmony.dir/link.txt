@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/test_harmony.dir/tests/test_state_machine.cpp.o CMakeFiles/test_harmony.dir/src/logger.cpp.o CMakeFiles/test_harmony.dir/src/state_machine.cpp.o CMakeFiles/test_harmony.dir/src/memory_budget.cpp.o -o test_harmony  -lpthread 

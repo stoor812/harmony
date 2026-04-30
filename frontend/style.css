@@ -243,18 +243,31 @@ input[type=range] {
   padding: 6px;
   border-radius: 8px;
   background: var(--card);
-  cursor: pointer;
-  transition: background 0.2s;
 }
-.search-item:hover { background: var(--accent2); }
 .search-art { width: 36px; height: 36px; border-radius: 4px; object-fit: cover; }
 .search-info { flex: 1; min-width: 0; }
 .search-title  { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .search-artist { font-size: 11px; color: var(--muted); }
-.search-play   { font-size: 18px; color: var(--accent); padding: 0 4px; }
+.search-actions { display: flex; flex-direction: column; gap: 4px; }
+.search-queue-btn {
+  background: var(--accent2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.search-queue-btn:hover { background: var(--accent); }
 
 /* Fault buttons */
-.fault-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+.fault-buttons { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+.fault-item { display: flex; flex-direction: column; gap: 4px; }
+.fault-btn.active { background: var(--accent); border-color: var(--accent); }
+.fault-msg { font-size: 11px; color: var(--muted); max-width: 160px; line-height: 1.5; display: none; }
+.fault-msg.visible { display: block; }
 
 /* Health */
 .health-info { font-size: 12px; color: var(--muted); line-height: 1.8; font-family: monospace; }
