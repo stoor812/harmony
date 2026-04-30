@@ -1,0 +1,19 @@
+# C++ build output
+daemon/build/
+
+# Runtime logs
+*.log
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Claude Code tooling
+.claude/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
