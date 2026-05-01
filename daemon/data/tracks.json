@@ -2,46 +2,30 @@
   "tracks": [
     {
       "id": "1",
-      "title": "HUMBLE. (Mixed)",
-      "artist": "Kendrick Lamar",
-      "album": "DAMN.",
-      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/a0/28/81/a02881be-7f5f-54e4-06bc-c29574dcc569/70b4e324-c491-47eb-bcae-1860754db796.jpg/100x100bb.jpg",
-      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/d6/f6/c9/d6f6c9da-bab0-c7bb-6fb1-3ee61972fb34/mzaf_4661277755767330858.plus.aac.p.m4a"
+      "title": "Happy",
+      "artist": "Pharrell Williams",
+      "album": "G I R L",
+      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/76/ff/5e/76ff5ee0-7ab4-2ac2-2598-486a9ccc06e1/886444516877.jpg/100x100bb.jpg",
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/4c/ba/89/4cba89f1-1a8a-3f33-b3ac-d88bcad8b996/mzaf_17135561476274403451.plus.aac.p.m4a"
     },
     {
       "id": "2",
-      "title": "God's Plan",
-      "artist": "Drake",
-      "album": "Scorpion",
-      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/bb/6d/8f/bb6d8f67-6d04-10b5-dd62-eb5809ac54fc/00602567879152.rgb.jpg/100x100bb.jpg",
-      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/da/7d/f1/da7df14b-8ee6-5020-d850-ccc0381eb141/mzaf_5511967710095380808.plus.aac.p.m4a"
-    },
-    {
-      "id": "3",
-      "title": "bad guy",
-      "artist": "Billie Eilish",
-      "album": "WHEN WE ALL FALL ASLEEP, WHERE DO WE GO?",
-      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/1a/37/d1/1a37d1b1-8508-54f2-f541-bf4e437dda76/19UMGIM05028.rgb.jpg/100x100bb.jpg",
-      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c3/87/1f/c3871f7e-3260-d615-1c66-5fdca2c3a48f/mzaf_10721331211699880949.plus.aac.p.m4a"
-    },
-    {
-      "id": "4",
-      "title": "Shape of You",
-      "artist": "Ed Sheeran",
-      "album": "÷ (Divide)",
-      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/15/e6/e8/15e6e8a4-4190-6a8b-86c3-ab4a51b88288/190295851286.jpg/100x100bb.jpg",
-      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/44/c7/4f/44c74f0d-72dc-6143-d4d0-ba14d661ca0d/mzaf_9566898362556366703.plus.aac.p.m4a"
-    },
-    {
-      "id": "5",
       "title": "Blinding Lights",
       "artist": "The Weeknd",
-      "album": "After Hours",
+      "album": "Blinding Lights - Single",
       "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/a6/6e/bf/a66ebf79-5008-8948-b352-a790fc87446b/19UM1IM04638.rgb.jpg/100x100bb.jpg",
       "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/17/b4/8f/17b48f9a-0b93-6bb8-fe1d-3a16623c2cfb/mzaf_9560252727299052414.plus.aac.p.m4a"
     },
     {
-      "id": "6",
+      "id": "3",
+      "title": "24K Magic",
+      "artist": "Bruno Mars",
+      "album": "24K Magic",
+      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/e3/47/a0/e347a0cc-87ce-5d05-d560-176c7d48f66e/075679904119.jpg/100x100bb.jpg",
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/72/77/cd/7277cdca-1387-1c7a-529e-72f3c2ed070d/mzaf_3495320363426981496.plus.aac.p.m4a"
+    },
+    {
+      "id": "4",
       "title": "Levitating",
       "artist": "Dua Lipa",
       "album": "Future Nostalgia",
@@ -49,36 +33,52 @@
       "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/59/dc/4d/59dc4dda-93ff-8f1c-c536-f005f6ea6af5/mzaf_3066686759813252385.plus.aac.p.m4a"
     },
     {
+      "id": "5",
+      "title": "Billie Jean",
+      "artist": "Michael Jackson",
+      "album": "Thriller",
+      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/32/4f/fd/324ffda2-9e51-8f6a-0c2d-c6fd2b41ac55/074643811224.jpg/100x100bb.jpg",
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/dc/bc/8a/dcbc8a3e-4ce1-c00d-cc02-eda2212053c7/mzaf_8347559338388601510.plus.aac.p.m4a"
+    },
+    {
+      "id": "6",
+      "title": "Circles",
+      "artist": "Post Malone",
+      "album": "Hollywood's Bleeding",
+      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/7b/1b/1b/7b1b1b0b-7ce2-b223-f9e0-8e36abe51877/19UMGIM78325.rgb.jpg/100x100bb.jpg",
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f9/b1/aa/f9b1aaed-3e24-227f-153d-99969f8b8464/mzaf_6272498007975402144.plus.aac.p.m4a"
+    },
+    {
       "id": "7",
-      "title": "Heat Waves",
-      "artist": "Glass Animals",
-      "album": "Dreamland",
-      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/da/8b/77/da8b7731-6f4f-eacf-5e74-8b23389eefa1/20UMGIM03371.rgb.jpg/100x100bb.jpg",
-      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a3/4c/b9/a34cb911-40fc-5f0c-e862-14bd171a77aa/mzaf_384792072030970151.plus.aac.p.m4a"
+      "title": "Sunflower",
+      "artist": "Post Malone & Swae Lee",
+      "album": "Spider-Man: Into the Spider-Verse",
+      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/4b/30/2c/4b302cb6-7a14-5464-4e97-0577e9d0be49/18UMGIM82277.rgb.jpg/100x100bb.jpg",
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/98/f0/d6/98f0d67e-f8bf-762d-cac7-1c6b3b6b35dd/mzaf_4543283896248560946.plus.aac.p.m4a"
     },
     {
       "id": "8",
-      "title": "INDUSTRY BABY",
-      "artist": "Lil Nas X",
-      "album": "MONTERO",
-      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/f7/16/67/f7166746-6299-5e54-8c7c-9535e941a53e/886449403929.jpg/100x100bb.jpg",
-      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/be/9b/35/be9b35f7-e564-fafa-8586-146e2f7b7320/mzaf_7128424125938593552.plus.aac.p.m4a"
+      "title": "Smooth",
+      "artist": "Santana",
+      "album": "Ultimate Santana",
+      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/5d/cc/48/5dcc4850-35e3-239a-3fde-dbade47cddfe/886970629324.jpg/100x100bb.jpg",
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ac/77/6b/ac776b92-9955-683b-b3c2-3d0aca3ce8f1/mzaf_13380279657797242913.plus.aac.p.m4a"
     },
     {
       "id": "9",
-      "title": "As It Was",
-      "artist": "Harry Styles",
-      "album": "Harry's House",
-      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/19/de/12/19de1252-5cb8-aa28-3acf-8236df1b38fc/190295743524.jpg/100x100bb.jpg",
-      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/8d/c4/49/8dc449d0-3b7f-4b29-8e96-f3c16a893f08/mzaf_11058055948868149088.plus.aac.p.m4a"
+      "title": "Hold On, We're Going Home",
+      "artist": "Drake",
+      "album": "Nothing Was the Same (Deluxe)",
+      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/51/61/f3/5161f3c4-2292-f035-eb68-6f95bbc9edd6/00602537542338.rgb.jpg/100x100bb.jpg",
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/e1/9b/b6/e19bb624-9cd8-021b-f771-e51629057774/mzaf_13878644440815306616.plus.aac.p.m4a"
     },
     {
       "id": "10",
-      "title": "Anti-Hero",
-      "artist": "Taylor Swift",
-      "album": "Midnights",
-      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/1e/3e/19/1e3e199f-d3d8-62c6-61c6-cd7c5db5b6cb/22UM1IM23791.rgb.jpg/100x100bb.jpg",
-      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/2b/e1/4f/2be14f66-8876-8be5-31f4-17eaac0a55eb/mzaf_4644647305556239875.plus.aac.p.m4a"
+      "title": "Stronger",
+      "artist": "Kanye West",
+      "album": "Graduation",
+      "album_art": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/39/25/2d/39252d65-2d50-b991-0962-f7a98a761271/00602517483507.rgb.jpg/100x100bb.jpg",
+      "preview_url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/96/f2/25/96f225f2-cd07-3639-4133-0910aa9725c0/mzaf_13857358519708863745.plus.aac.p.m4a"
     }
   ]
 }
