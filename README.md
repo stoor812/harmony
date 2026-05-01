@@ -2,11 +2,8 @@
 
 A C++ music-player daemon with a vanilla JS frontend. The daemon runs an HTTP server that manages a finite-state-machine player, streams 30-second iTunes previews, and exposes a REST API. The browser UI polls the daemon every second and renders live state.
 
-![State: PLAYING](https://img.shields.io/badge/state-PLAYING-16a34a?style=flat-square)
-![C++17](https://img.shields.io/badge/C%2B%2B-17-blue?style=flat-square)
-![License: MIT](https://img.shields.io/badge/license-MIT-grey?style=flat-square)
-
 ---
+![Harmony Demo](assets/demo.gif)
 
 ## Architecture
 
