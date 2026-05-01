@@ -1,19 +1,41 @@
-# C++ build output
+# ── C++ Build Artifacts ───────────────────────────────────────
 daemon/build/
+*.o
+*.a
+*.so
+*.so.*
+*.out
+*.exe
 
-# Runtime logs
+# ── CMake ─────────────────────────────────────────────────────
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+CTestTestfile.cmake
+_deps/
+install_manifest.txt
+
+# ── Runtime Logs ──────────────────────────────────────────────
 *.log
+daemon/harmony.log
 
-# Python bytecode
-__pycache__/
-*.pyc
-
-# Claude Code tooling
-.claude/
-
-# OS junk
+# ── OS Junk ───────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Editor
+# ── Editor ────────────────────────────────────────────────────
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+
+# ── Claude Code ───────────────────────────────────────────────
+.claude/
