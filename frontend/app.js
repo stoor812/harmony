@@ -7,14 +7,28 @@ function showToast(title, detail = '', type = 'info', duration = 2500) {
 
   const toast = document.createElement('div');
   toast.className = 'toast';
-  toast.innerHTML = `
-    <span class="toast-icon ${type}">${icons[type]}</span>
-    <div class="toast-body">
-      <div class="toast-title">${title}</div>
-      ${detail ? `<div class="toast-detail">${detail}</div>` : ''}
-    </div>
-  `;
 
+  const iconSpan = document.createElement('span');
+  iconSpan.className = `toast-icon ${type}`;
+  iconSpan.textContent = icons[type] || '';
+
+  const body = document.createElement('div');
+  body.className = 'toast-body';
+
+  const titleDiv = document.createElement('div');
+  titleDiv.className = 'toast-title';
+  titleDiv.textContent = title;
+  body.appendChild(titleDiv);
+
+  if (detail) {
+    const detailDiv = document.createElement('div');
+    detailDiv.className = 'toast-detail';
+    detailDiv.textContent = detail;
+    body.appendChild(detailDiv);
+  }
+
+  toast.appendChild(iconSpan);
+  toast.appendChild(body);
   container.appendChild(toast);
 
   const dismiss = () => {
@@ -187,19 +201,43 @@ function formatTime(secs) {
 // ── Up Next ────────────────────────────────────────────────────────────────
 function updateUpNext(tracks) {
   const container = document.getElementById('up-next-list');
+  container.replaceChildren();
+
   if (!tracks.length) {
-    container.innerHTML = '<div class="up-next-empty">Queue empty</div>';
+    const empty = document.createElement('div');
+    empty.className = 'up-next-empty';
+    empty.textContent = 'Queue empty';
+    container.appendChild(empty);
     return;
   }
-  container.innerHTML = tracks.map(t => `
-    <div class="up-next-item">
-      <img class="up-next-art" src="${t.album_art}" alt="" onerror="this.src='https://via.placeholder.com/36'"/>
-      <div class="up-next-info">
-        <div class="up-next-title">${t.title}</div>
-        <div class="up-next-artist">${t.artist}</div>
-      </div>
-    </div>
-  `).join('');
+
+  for (const t of tracks) {
+    const item = document.createElement('div');
+    item.className = 'up-next-item';
+
+    const img = document.createElement('img');
+    img.className = 'up-next-art';
+    img.alt = '';
+    img.src = t.album_art || '';
+    img.addEventListener('error', () => { img.src = 'https://via.placeholder.com/36'; });
+
+    const info = document.createElement('div');
+    info.className = 'up-next-info';
+
+    const title = document.createElement('div');
+    title.className = 'up-next-title';
+    title.textContent = t.title;
+
+    const artist = document.createElement('div');
+    artist.className = 'up-next-artist';
+    artist.textContent = t.artist;
+
+    info.appendChild(title);
+    info.appendChild(artist);
+    item.appendChild(img);
+    item.appendChild(info);
+    container.appendChild(item);
+  }
 }
 
 // ── Health panel ───────────────────────────────────────────────────────────
@@ -268,7 +306,15 @@ async function doSearch() {
   if (!query) return;
 
   const container = document.getElementById('search-results');
-  container.innerHTML = '<div style="color:#888;font-size:13px">Searching...</div>';
+  const setStatus = (text, color = '#888') => {
+    container.replaceChildren();
+    const div = document.createElement('div');
+    div.style.cssText = `color:${color};font-size:13px`;
+    div.textContent = text;
+    container.appendChild(div);
+  };
+
+  setStatus('Searching...');
 
   try {
     const res   = await fetch(`${DAEMON}/search?q=${encodeURIComponent(query)}`);
@@ -276,28 +322,59 @@ async function doSearch() {
     const items = data.results || [];
 
     if (!items.length) {
-      container.innerHTML = '<div style="color:#888;font-size:13px">No results</div>';
+      setStatus('No results');
       return;
     }
 
-    container.innerHTML = items.map(t => {
-      const td = JSON.stringify(t).replace(/"/g, '&quot;');
-      return `
-        <div class="search-item">
-          <img class="search-art" src="${t.album_art}" alt="" onerror="this.src='https://via.placeholder.com/36'"/>
-          <div class="search-info">
-            <div class="search-title">${t.title}</div>
-            <div class="search-artist">${t.artist}</div>
-          </div>
-          <div class="search-actions">
-            <button class="search-queue-btn" onclick="enqueueTrack(${td}, 'start')">▶ Next</button>
-            <button class="search-queue-btn" onclick="enqueueTrack(${td}, 'end')">+ End</button>
-          </div>
-        </div>
-      `;
-    }).join('');
+    container.replaceChildren();
+
+    for (const t of items) {
+      const item = document.createElement('div');
+      item.className = 'search-item';
+
+      const img = document.createElement('img');
+      img.className = 'search-art';
+      img.alt = '';
+      img.src = t.album_art || '';
+      img.addEventListener('error', () => { img.src = 'https://via.placeholder.com/36'; });
+
+      const info = document.createElement('div');
+      info.className = 'search-info';
+
+      const title = document.createElement('div');
+      title.className = 'search-title';
+      title.textContent = t.title;
+
+      const artist = document.createElement('div');
+      artist.className = 'search-artist';
+      artist.textContent = t.artist;
+
+      info.appendChild(title);
+      info.appendChild(artist);
+
+      const actions = document.createElement('div');
+      actions.className = 'search-actions';
+
+      const btnNext = document.createElement('button');
+      btnNext.className = 'search-queue-btn';
+      btnNext.textContent = '▶ Next';
+      btnNext.addEventListener('click', () => enqueueTrack(t, 'start'));
+
+      const btnEnd = document.createElement('button');
+      btnEnd.className = 'search-queue-btn';
+      btnEnd.textContent = '+ End';
+      btnEnd.addEventListener('click', () => enqueueTrack(t, 'end'));
+
+      actions.appendChild(btnNext);
+      actions.appendChild(btnEnd);
+
+      item.appendChild(img);
+      item.appendChild(info);
+      item.appendChild(actions);
+      container.appendChild(item);
+    }
   } catch (e) {
-    container.innerHTML = '<div style="color:#e74c3c;font-size:13px">Search failed - is daemon running?</div>';
+    setStatus('Search failed - is daemon running?', '#e74c3c');
   }
 }
 

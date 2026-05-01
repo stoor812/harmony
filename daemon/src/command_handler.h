@@ -20,10 +20,14 @@ class CommandHandler {
 public:
     CommandHandler(StateMachine& sm, TrackQueue& queue,
                    Watchdog& watchdog, ItunesClient& itunes);
+    ~CommandHandler();
 
     // Start HTTP server (blocks - run in a thread)
     void start(int port = 8080);
     void stop();
+
+    // Exposed so the signal handler in main can call server().stop()
+    httplib::Server& server() { return server_; }
 
 private:
     StateMachine&  sm_;

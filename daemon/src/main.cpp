@@ -55,15 +55,18 @@ int main() {
 
     // ── HTTP server ───────────────────────────────────────────────────────
     CommandHandler handler(sm, queue, watchdog, itunes);
-    g_server_ptr = nullptr;  // will be set inside handler
+
+    // Wire signal handler to the live server so SIGINT/SIGTERM unblock listen()
+    g_server_ptr = &handler.server();
 
     Logger::instance().info("MAIN", "Starting HTTP server on port 8080");
     Logger::instance().info("MAIN", "Endpoints: GET /status  POST /command  GET /search  GET /health");
 
-    // Run server (blocks until stopped)
+    // Run server (blocks until stopped via signal handler)
     handler.start(8080);
 
     // ── Clean shutdown ────────────────────────────────────────────────────
+    handler.stop();   // joins buffer thread; idempotent (destructor calls it too)
     watchdog.stop();
     Logger::instance().info("MAIN", "Harmony daemon stopped cleanly");
     return 0;

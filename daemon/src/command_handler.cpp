@@ -12,6 +12,11 @@ CommandHandler::CommandHandler(StateMachine& sm, TrackQueue& queue,
     Logger::instance().info("HTTP", "Command handler initialized");
 }
 
+CommandHandler::~CommandHandler() {
+    // RAII safety net: guarantees buffer thread is joined even on early exit
+    stop();
+}
+
 void CommandHandler::start(int port) {
     register_routes();
     Logger::instance().info("HTTP", "Server listening on port " + std::to_string(port));
