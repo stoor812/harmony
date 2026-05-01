@@ -1,0 +1,70 @@
+# ── harmony.service ───────────────────────────────────────────────────────────
+# Systemd unit file for the Harmony music player daemon.
+# Demonstrates embedded Linux service deployment: process supervision,
+# automatic restart on failure, and boot-time startup.
+#
+# Install:
+#   sudo cp harmony.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable harmony
+#   sudo systemctl start harmony
+#
+# Inspect:
+#   sudo systemctl status harmony
+#   journalctl -u harmony -f
+
+[Unit]
+Description=Harmony - Embedded Speaker Firmware Simulator
+Documentation=https://github.com/stoor812/harmony
+# Ensure network is up before starting - daemon calls the iTunes API
+After=network.target
+# Do not start if network failed to come up
+Wants=network.target
+
+[Service]
+# simple: systemd considers the service started as soon as ExecStart forks.
+# Correct for daemons that don't double-fork or write a PID file.
+Type=simple
+
+# Run as a dedicated low-privilege user, not root.
+# Create with: sudo useradd --system --no-create-home harmony
+User=harmony
+Group=harmony
+
+# Build output directory - harmony opens data/tracks.json relative to cwd.
+WorkingDirectory=/opt/harmony/daemon/build
+
+# The compiled daemon binary.
+ExecStart=/opt/harmony/daemon/build/harmony
+
+# Restart the process automatically if it exits with a non-zero code,
+# is killed by a signal, or hits the watchdog timeout.
+# Does NOT restart on clean exit (ExecStop / systemctl stop).
+Restart=on-failure
+RestartSec=5s
+
+# Hard cap on restart attempts: if harmony fails 5 times in 60 seconds,
+# systemd stops trying and marks the unit as failed.
+StartLimitBurst=5
+StartLimitIntervalSec=60s
+
+# Give the process 10 seconds to shut down cleanly on SIGTERM before SIGKILL.
+TimeoutStopSec=10s
+
+# Stdout/stderr go to the systemd journal (accessible via journalctl -u harmony).
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=harmony
+
+# ── Hardening ─────────────────────────────────────────────────────────────────
+# Minimal sandboxing appropriate for an embedded simulator running on a LAN.
+
+# Prevent the process from gaining new privileges via setuid/setgid.
+NoNewPrivileges=true
+
+# Give the process a private /tmp so it can't interfere with other services.
+PrivateTmp=true
+
+[Install]
+# Start harmony automatically when the system reaches multi-user (non-graphical) mode.
+WantedBy=multi-user.target

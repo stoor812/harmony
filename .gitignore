@@ -16,9 +16,10 @@ CTestTestfile.cmake
 _deps/
 install_manifest.txt
 
-# ── Runtime Logs ──────────────────────────────────────────────
+# ── Runtime Logs & PID Files ──────────────────────────────────
 *.log
 daemon/harmony.log
+.harmony-*.pid
 
 # ── OS Junk ───────────────────────────────────────────────────
 .DS_Store
